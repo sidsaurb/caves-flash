@@ -23,6 +23,21 @@
 
 			transitions[FrameMap.c1st_milestone.toString() + " back"] = FrameMap.c1st_chamber;
 
+			transitions[FrameMap.c2nd_chamber.toString() + " read"] = FrameMap.c2nd_milestone;
+			transitions[FrameMap.c2nd_chamber.toString() + " go"] = FrameMap.c2nd_boulder;
+			transitions[FrameMap.c2nd_chamber.toString() + " back"] = FrameMap.c1st_chamber;
+
+			transitions[FrameMap.c2nd_boulder.toString() + " back"] = FrameMap.c2nd_chamber;
+			transitions[FrameMap.c2nd_boulder.toString() + " go"] = FrameMap.c2nd_chamber;
+
+			transitions[FrameMap.c2nd_milestone.toString() + " back"] = FrameMap.c2nd_chamber;
+
+			transitions[FrameMap.c3rd_chamber.toString() + " back"] = FrameMap.c2nd_chamber;
+			//transitions[FrameMap.c3rd_chamber.toString() + " go"] = FrameMap.c2nd_chamber;
+			//transitions[FrameMap.c3rd_chamber.toString() + " enter"] = FrameMap.c2nd_chamber;
+
+
+
 		}
 
 	}

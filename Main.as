@@ -17,6 +17,7 @@
 		var teamNamePrompt: String = "team name here";
 		var passwordPrompt: String = "password here";
 		var tMap: TransitionMap = new TransitionMap();
+		var commandboxListnerAdded: Boolean = false;
 
 		public function Main() {
 			teamname.addEventListener(FocusEvent.FOCUS_IN, onTeamNameFocusChange);
@@ -42,7 +43,6 @@
 			}
 		}
 
-
 		function commandAcceptListner(event: KeyboardEvent): void {
 			if (event.charCode == 13) {
 				var key: String = this.currentFrame.toString() + " " + commandbox.commandtext.text;
@@ -54,6 +54,8 @@
 					navigateFrame(tMap.transitions[key]);
 				} else if (this.currentFrame == FrameMap.c1st_milestone) {
 					checkLevelnSolution(1, commandbox.commandtext.text);
+				} else if (this.currentFrame == FrameMap.c2nd_milestone) {
+					checkLevelnSolution(2, commandbox.commandtext.text);
 				} else {
 					// show unknown command dialog
 					errorbox.text = "Unknown command " + commandbox.commandtext.text;
@@ -77,7 +79,7 @@
 							commandbox.commandtext.text = "";
 							progressbar.visible = false;
 							opacity.alpha = 0;
-							navigateFrame(levelToFrameNumber(n + 1));
+							navigateFrame(HelperMethods.levelToFrameNumber(n + 1));
 						} else {
 							progressbar.visible = false;
 							opacity.alpha = 0;
@@ -108,57 +110,28 @@
 			}
 		}
 
-		function levelToFrameNumber(n: int): int {
-			switch (n) {
-				case 1:
-					return FrameMap.foothill;
-				case 2:
-					return FrameMap.c2nd_chamber;
-				case 3:
-					return FrameMap.c3rd_chamber;
-				case 4:
-					return FrameMap.c4th_chamber;
-				case 5:
-					return FrameMap.c5th_passage;
-				case 6:
-					return FrameMap.c6th_chamber;
-				case 7:
-					return FrameMap.c7th_chamber;
-				default:
-					return FrameMap.foothill;
-
-			}
-		}
-
-		function frameNumberToLevel(n: int): int {
-			if (n <= 7) {
-				return 1;
-			} else if (n <= 10) {
-				return 2;
-			} else if (n <= 10) {
-				return 3;
-			} else if (n <= 10) {
-				return 4;
-			} else if (n <= 10) {
-				return 5;
-			} else if (n <= 10) {
-				return 6;
-			} else {
-				return 7;
-			}
-		}
-
-		var commandboxListnerAdded: Boolean = false;
-
 		function navigateFrame(n: int): void {
 			gotoAndStop(n);
-			//trace(n, Globals.challengeLevels);
+			adjustOpacityLevel(n);
 			if (Globals.challengeLevels.indexOf(n) >= 0)
-				fetchchallenge(n);
-			//commandbox.removeEventListener(KeyboardEvent.KEY_DOWN, handler);
+				fetchChallenge(n);
 			if (!commandboxListnerAdded) {
 				commandbox.addEventListener(KeyboardEvent.KEY_DOWN, commandAcceptListner);
 				commandboxListnerAdded = true;
+			}
+		}
+
+		function adjustOpacityLevel(n: int): void {
+			if (n == FrameMap.c2nd_chamber) {
+				opacity.alpha = 0.75;
+			} else if (n == FrameMap.c3rd_side_chamber || 
+						n == FrameMap.c3rd_side_without_spirit || 
+						n == FrameMap.c3rd_under_chamber ||
+						n = FrameMap.c3rd_free_spirit) {
+				opacity.alpha = 0.6;
+			} else {
+				opacity.alpha = 0;
+
 			}
 		}
 
@@ -189,7 +162,7 @@
 			}
 		}
 
-		function fetchchallenge(n: int) {
+		function fetchChallenge(n: int) {
 			retrybox.visible = false;
 			opacity.alpha = 0.85;
 			progressbar.visible = true;
@@ -197,6 +170,7 @@
 			var jsonReq: String = JSON.stringify(req);
 			var challengeLoader: URLLoader = new URLLoader();
 			challengeLoader.addEventListener(Event.COMPLETE, function handler(e: Event): void {
+				//trace(e.target.data);
 				var resp: Object = JSON.parse(e.target.data);
 				if (resp.error == null) {
 					opacity.alpha = 0;
@@ -209,7 +183,7 @@
 					opacity.alpha = 0;
 					progressbar.visible = false;
 					retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-						fetchchallenge(n);
+						fetchChallenge(n);
 					});
 				}
 			}, false, 0, true);
@@ -218,7 +192,7 @@
 				progressbar.visible = false;
 				retrybox.visible = true;
 				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-					fetchchallenge(n);
+					fetchChallenge(n);
 				});
 			});
 			challengeLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
@@ -226,10 +200,10 @@
 				progressbar.visible = false;
 				retrybox.visible = true;
 				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-					fetchchallenge(n);
+					fetchChallenge(n);
 				});
 			});
-			var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHALLENGES + frameNumberToLevel(n));
+			var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHALLENGES + HelperMethods.frameNumberToLevel(n));
 			request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
 			request.data = jsonReq;
 			request.method = URLRequestMethod.POST;
@@ -287,40 +261,32 @@
 		function onTeamNameFocusChange(event: FocusEvent): void {
 			switch (event.type) {
 				case FocusEvent.FOCUS_IN:
-					{
-						if (teamname.text == teamNamePrompt) {
-							teamname.text = "";
-						}
-						break;
+					if (teamname.text == teamNamePrompt) {
+						teamname.text = "";
 					}
+					break;
 				case FocusEvent.FOCUS_OUT:
-					{
-						if (teamname.text == "") {
-							teamname.text = teamNamePrompt;
-						}
-						break;
+					if (teamname.text == "") {
+						teamname.text = teamNamePrompt;
 					}
+					break;
 			}
 		}
 
 		function onPasswordFocusChange(event: FocusEvent): void {
 			switch (event.type) {
 				case FocusEvent.FOCUS_IN:
-					{
-						if (password.text == passwordPrompt) {
-							password.text = "";
-							password.displayAsPassword = true;
-						}
-						break;
+					if (password.text == passwordPrompt) {
+						password.text = "";
+						password.displayAsPassword = true;
 					}
+					break;
 				case FocusEvent.FOCUS_OUT:
-					{
-						if (password.text == "") {
-							password.text = passwordPrompt;
-							password.displayAsPassword = false;
-						}
-						break;
+					if (password.text == "") {
+						password.text = passwordPrompt;
+						password.displayAsPassword = false;
 					}
+					break;
 			}
 		}
 	}
