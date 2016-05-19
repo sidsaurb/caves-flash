@@ -9,7 +9,7 @@
 		public static const c1st_milestone:int = 7;
 		public static const c2nd_chamber:int = 3;
 		public static const c2nd_boulder:int = 3;
-		public static const c2nd_milestone:int = 3;
+		public static const c2nd_milestone:int = 15;
 		public static const c3rd_chamber:int = 3;
 		public static const c3rd_side_chamber:int = 3;
 		public static const c3rd_side_without_spirit:int = 3;

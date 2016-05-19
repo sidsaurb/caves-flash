@@ -5,5 +5,9 @@
 		public static var completedTill: int;
 		public static var teamname: String;
 		public static var password: String;
+		
+	
+		public static var challengeLevels:Array = new Array(FrameMap.c1st_milestone, 
+															FrameMap.c2nd_milestone);
 	}
 }

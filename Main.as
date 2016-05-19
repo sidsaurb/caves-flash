@@ -56,6 +56,7 @@
 					checkLevelnSolution(1, commandbox.commandtext.text);
 				} else {
 					// show unknown command dialog
+					errorbox.text = "Unknown command " + commandbox.commandtext.text;
 					commandbox.commandtext.text = "";
 				}
 			}
@@ -63,7 +64,8 @@
 
 		function checkLevelnSolution(n: int, answer: String): void {
 			try {
-				//trace(Globals.password);
+				progressbar.visible = true;
+				opacity.alpha = 0.85;
 				var req: CheckAnswerRequest = new CheckAnswerRequest(Globals.teamname, Globals.password, answer);
 				var jsonReq: String = JSON.stringify(req);
 				//trace(jsonReq);
@@ -72,23 +74,41 @@
 					function handler(e: Event): void {
 						var resp: Object = JSON.parse(e.target.data);
 						if (resp.error == null && resp.success == true) {
-							commandbox.commandtext.text = 0;
-							navigateFrame(getLevelFrameNumber(n + 1));
+							commandbox.commandtext.text = "";
+							progressbar.visible = false;
+							opacity.alpha = 0;
+							navigateFrame(levelToFrameNumber(n + 1));
 						} else {
-							// show error dialog
+							progressbar.visible = false;
+							opacity.alpha = 0;
+							errorbox.text = "Unknown command " + commandbox.commandtext.text;
+							commandbox.commandtext.text = "";
 						}
 					}, false, 0, true);
+				checkLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
+					progressbar.visible = false;
+					opacity.alpha = 0;
+					errorbox.text = "Oops.. Can't connect";
+				});
+				checkLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
+					progressbar.visible = false;
+					opacity.alpha = 0;
+					errorbox.text = "Oops.. Can't connect";
+				});
 				var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHECKLEVELS + n.toString());
 				request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
 				request.data = jsonReq;
 				request.method = URLRequestMethod.POST;
 				checkLoader.load(request)
 			} catch (error: Error) {
+				progressbar.visible = false;
+				opacity.alpha = 0;
+				errorbox.text = "Oops.. Can't connect";
 				// show error dialog
 			}
 		}
 
-		function getLevelFrameNumber(n: int): int {
+		function levelToFrameNumber(n: int): int {
 			switch (n) {
 				case 1:
 					return FrameMap.foothill;
@@ -110,10 +130,31 @@
 			}
 		}
 
+		function frameNumberToLevel(n: int): int {
+			if (n <= 7) {
+				return 1;
+			} else if (n <= 10) {
+				return 2;
+			} else if (n <= 10) {
+				return 3;
+			} else if (n <= 10) {
+				return 4;
+			} else if (n <= 10) {
+				return 5;
+			} else if (n <= 10) {
+				return 6;
+			} else {
+				return 7;
+			}
+		}
+
 		var commandboxListnerAdded: Boolean = false;
 
 		function navigateFrame(n: int): void {
 			gotoAndStop(n);
+			//trace(n, Globals.challengeLevels);
+			if (Globals.challengeLevels.indexOf(n) >= 0)
+				fetchchallenge(n);
 			//commandbox.removeEventListener(KeyboardEvent.KEY_DOWN, handler);
 			if (!commandboxListnerAdded) {
 				commandbox.addEventListener(KeyboardEvent.KEY_DOWN, commandAcceptListner);
@@ -148,8 +189,59 @@
 			}
 		}
 
+		function fetchchallenge(n: int) {
+			retrybox.visible = false;
+			opacity.alpha = 0.85;
+			progressbar.visible = true;
+			var req: ChallengeRequest = new ChallengeRequest(Globals.teamname, Globals.password);
+			var jsonReq: String = JSON.stringify(req);
+			var challengeLoader: URLLoader = new URLLoader();
+			challengeLoader.addEventListener(Event.COMPLETE, function handler(e: Event): void {
+				var resp: Object = JSON.parse(e.target.data);
+				if (resp.error == null) {
+					opacity.alpha = 0;
+					progressbar.visible = false;
+					retrybox.visible = false;
+					challengetext.text = resp.challenge;
+				} else {
+					// show error dialog
+					retrybox.visible = true;
+					opacity.alpha = 0;
+					progressbar.visible = false;
+					retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+						fetchchallenge(n);
+					});
+				}
+			}, false, 0, true);
+			challengeLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
+				opacity.alpha = 0;
+				progressbar.visible = false;
+				retrybox.visible = true;
+				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+					fetchchallenge(n);
+				});
+			});
+			challengeLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
+				opacity.alpha = 0;
+				progressbar.visible = false;
+				retrybox.visible = true;
+				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+					fetchchallenge(n);
+				});
+			});
+			var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHALLENGES + frameNumberToLevel(n));
+			request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
+			request.data = jsonReq;
+			request.method = URLRequestMethod.POST;
+			challengeLoader.load(request)
+		}
+
 		function loginHandler(event: MouseEvent): void {
 			try {
+				loginbutton.visible = false;
+				progressbar.visible = true;
+				errorbox.text = "";
+				opacity.alpha = 0.85;
 				var req: LoginRequest = new LoginRequest(teamname.text, password.text);
 				var jsonReq: String = JSON.stringify(req);
 				var loginLoader: URLLoader = new URLLoader();
@@ -159,19 +251,36 @@
 						Globals.completedTill = resp.completedTill;
 						Globals.teamname = req.teamname;
 						Globals.password = req.password;
+						opacity.alpha = 0.5;
 						gotoAndStop(2);
 						loadLevelList();
 					} else {
+						errorbox.text = resp.error;
+						opacity.alpha = 0.5;
+						loginbutton.visible = true;
+						progressbar.visible = false;
 						// show error dialog
 					}
 				}, false, 0, true);
+				loginLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
+					loginbutton.visible = true;
+					progressbar.visible = false;
+					errorbox.text = "Oops.. Can't connect";
+					opacity.alpha = 0.5;
+				});
+				loginLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
+					loginbutton.visible = true;
+					progressbar.visible = false;
+					errorbox.text = "Oops.. Can't connect";
+					opacity.alpha = 0.5;
+				});
 				var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.LOGIN);
 				request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
 				request.data = jsonReq;
 				request.method = URLRequestMethod.POST;
 				loginLoader.load(request)
 			} catch (error: Error) {
-
+				//trace("sad")
 			}
 		}
 
