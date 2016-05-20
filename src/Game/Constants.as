@@ -7,6 +7,9 @@
 		public static const LOGIN = "login";
 		public static const CHALLENGES = "challenge";
 		public static const CHECKLEVELS = "checkLevel";
+		public static const FREESPIRIT = "fs";
+		public static const FOUNDWAND = "fw";
+		public static const DES = "des";
 
 	}
 
