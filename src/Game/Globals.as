@@ -12,7 +12,8 @@
 		public static var challengeLevels: Array = new Array(
 			FrameMap.c1st_milestone,
 			FrameMap.c2nd_milestone,
-			FrameMap.c3rd_milestone
+			FrameMap.c3rd_milestone,
+			FrameMap.c6th_milestone
 		);
 	}
 }

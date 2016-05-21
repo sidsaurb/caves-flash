@@ -10,6 +10,7 @@
 		public static const FREESPIRIT = "fs";
 		public static const FOUNDWAND = "fw";
 		public static const DES = "des";
+		public static const AES = "aes";
 
 	}
 

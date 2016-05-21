@@ -27,7 +27,6 @@
 			teamname.text = teamNamePrompt;
 			password.text = passwordPrompt;
 			loginbutton.addEventListener(MouseEvent.CLICK, loginHandler);
-			//navigateFrame(FrameMap.foothill);
 		}
 
 
@@ -48,8 +47,6 @@
 				var key: String = this.currentFrame.toString() + " " + commandbox.commandtext.text;
 				trace(key);
 				if (key in tMap.transitions) {
-					//trace("found")
-					//trace(tMap.transitions[key]);
 					commandbox.commandtext.text = "";
 					navigateFrame(tMap.transitions[key]);
 				} else if (this.currentFrame == FrameMap.c1st_milestone) {
@@ -59,7 +56,11 @@
 				} else if (this.currentFrame == FrameMap.c3rd_milestone) {
 					checkLevelnSolution(3, commandbox.commandtext.text);
 				} else if (this.currentFrame == FrameMap.c4th_milestone) {
-					checkLevelnSolution(4, commandbox.commandtext.text);
+					sendEncryptionRequest(4, commandbox.commandtext.text);
+				} else if (this.currentFrame == FrameMap.c5th_milestone) {
+					sendEncryptionRequest(5, commandbox.commandtext.text);
+				} else if (this.currentFrame == FrameMap.c6th_milestone) {
+					checkLevelnSolution(6, commandbox.commandtext.text);
 				} else if (this.currentFrame == FrameMap.c3rd_chamber && (commandbox.commandtext.text == "go" || commandbox.commandtext.text == "enter")) {
 					commandbox.commandtext.text = "";
 					if (Globals.spiritFreed == true)
@@ -99,7 +100,7 @@
 					commandbox.commandtext.text = "";
 					if (Globals.spiritFreed == true) {
 						navigateFrame(FrameMap.c4th_milestone);
-						urltextbox.text = Constants.BASEURL + Constants.DES;
+						//urltextbox.text = Constants.BASEURL + Constants.DES;
 					} else {
 						navigateFrame(FrameMap.c4th_empty_milestone);
 					}
@@ -110,17 +111,102 @@
 					} else {
 						navigateFrame(FrameMap.c4th_first_dive);
 					}
-				} else if (this.currentFrame == FrameMap.c4th_under_water && (commandbox.commandtext.text == "pull" || commandbox.commandtext.text == "take")) {
+				} else if (this.currentFrame == FrameMap.c4th_under_water) {
 					// die and restart the game
 					errorbox.text = "You are dead";
 				} else if (this.currentFrame == FrameMap.c4th_breathe_and_dive && (commandbox.commandtext.text == "pull" || commandbox.commandtext.text == "take")) {
 					commandbox.commandtext.text = "";
 					sendCheckpointQueries(1);
+				} else if (this.currentFrame == FrameMap.c5th_fall || this.currentFrame == FrameMap.c5th_back_fall) {
+					// die and restart the game
+					errorbox.text = "You are dead";
+				} else if (commandbox.commandtext.text == "read" && (this.currentFrame == FrameMap.c6th_chamber ||
+					this.currentFrame == FrameMap.c6th_maze_1 ||
+					this.currentFrame == FrameMap.c6th_maze_2 ||
+					this.currentFrame == FrameMap.c6th_maze_3 ||
+					this.currentFrame == FrameMap.c6th_maze_4 ||
+					this.currentFrame == FrameMap.c6th_maze_5 ||
+					this.currentFrame == FrameMap.c6th_maze_6 ||
+					this.currentFrame == FrameMap.c6th_maze_7 ||
+					this.currentFrame == FrameMap.c6th_maze_8 ||
+					this.currentFrame == FrameMap.c6th_maze_9)) {
+					commandbox.commandtext.text = "";
+					errorbox.text = "Nothing is written on the glass panel";
 				} else {
 					// show unknown command dialog
 					errorbox.text = "Unknown command " + commandbox.commandtext.text;
 					commandbox.commandtext.text = "";
 				}
+				}
+			}
+		}
+
+
+		function sendEncryptionRequest(level: int, plaintext: String): void {
+			try {
+				progressbar.visible = true;
+				opacity.alpha = 0.85;
+				var req: EncryptionQuery = new EncryptionQuery(Globals.teamname, Globals.password, plaintext);
+				var jsonReq: String = JSON.stringify(req);
+				var encLoader: URLLoader = new URLLoader();
+				encLoader.addEventListener(Event.COMPLETE,
+					function handler(e: Event): void {
+						var resp: Object = JSON.parse(e.target.data);
+						if (level == 4) {
+							opacity.alpha = 0;
+						} else {
+							opacity.alpha = 0.3;
+						}
+						progressbar.visible = false;
+						if (resp.error == null) {
+							errorbox.text = "";
+							commandbox.commandtext.text = "";
+							if (resp.success == true) {
+								if (level == 4) {
+									navigateFrame(FrameMap.c5th_passage);
+								} else {
+									navigateFrame(FrameMap.c6th_chamber);
+								}
+							} else {
+								ciphertextbox.text = resp.ciphertext;
+							}
+						} else {
+							errorbox.text = resp.error;
+						}
+					}, false, 0, true);
+				encLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
+					progressbar.visible = false;
+					if (level == 4)
+						opacity.alpha = 0;
+					else
+						opacity.alpha = 0.3;
+					errorbox.text = "Oops.. Can't connect";
+				});
+				encLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
+					progressbar.visible = false;
+					if (level == 4)
+						opacity.alpha = 0;
+					else
+						opacity.alpha = 0.3;
+					errorbox.text = "Oops.. Can't connect";
+				});
+				var request: URLRequest;
+				if (level == 4) {
+					request = new URLRequest(Constants.BASEURL + Constants.DES);
+				} else {
+					request = new URLRequest(Constants.BASEURL + Constants.AES);
+				}
+				request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
+				request.data = jsonReq;
+				request.method = URLRequestMethod.POST;
+				encLoader.load(request)
+			} catch (error: Error) {
+				progressbar.visible = false;
+				if (level == 4)
+					opacity.alpha = 0;
+				else
+					opacity.alpha = 0.3;
+				errorbox.text = "Oops.. Can't connect";
 			}
 		}
 
@@ -262,12 +348,18 @@
 				n == FrameMap.c3rd_under_chamber ||
 				n == FrameMap.c4th_first_dive ||
 				n == FrameMap.c5th_fall ||
+				n == FrameMap.c5th_water ||
+				n == FrameMap.c5th_pool ||
+				n == FrameMap.c5th_underwater ||
 				n == FrameMap.c5th_back_fall ||
+				n == FrameMap.c7th_room ||
 				n == FrameMap.c3rd_free_spirit) {
 				opacity.alpha = 0.6;
 			} else if (n == FrameMap.c4th_lake ||
 				n == FrameMap.c4th_lake_shore_with_wand ||
 				n == FrameMap.c5th_hall ||
+				n == FrameMap.c5th_milestone ||
+				n == FrameMap.c7th_chamber ||
 				n == FrameMap.c4th_lake_shore_without_wand) {
 				opacity.alpha = 0.3;
 			} else {
@@ -319,7 +411,6 @@
 					challengetext.text = resp.challenge;
 				} else {
 					// show error dialog
-
 					retrybox.visible = true;
 					opacity.alpha = 0;
 					progressbar.visible = false;

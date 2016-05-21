@@ -31,11 +31,11 @@
 				return 2;
 			} else if (n <= 19) {
 				return 3;
-			} else if (n <= 10) {
+			} else if (n <= 29) {
 				return 4;
-			} else if (n <= 10) {
+			} else if (n <= 37) {
 				return 5;
-			} else if (n <= 10) {
+			} else if (n <= 49) {
 				return 6;
 			} else {
 				return 7;
