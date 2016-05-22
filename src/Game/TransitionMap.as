@@ -195,6 +195,36 @@
 			transitions[FrameMap.c6th_maze_0.toString() + " back"] = FrameMap.c6th_maze_0;
 			
 			transitions[FrameMap.c6th_milestone.toString() + " back"] = FrameMap.c6th_maze_0;
+			
+			//transitions[FrameMap.c7th_chamber.toString() + " back"] = FrameMap.c6th_maze_0;
+			transitions[FrameMap.c7th_chamber.toString() + " go"] = FrameMap.c7th_room;
+			transitions[FrameMap.c7th_chamber.toString() + " enter"] = FrameMap.c7th_room;
+			
+			transitions[FrameMap.c7th_room.toString() + " back"] = FrameMap.c7th_chamber;
+			transitions[FrameMap.c7th_room.toString() + " go"] = FrameMap.c7th_door;
+			transitions[FrameMap.c7th_room.toString() + " enter"] = FrameMap.c7th_door;
+			
+			transitions[FrameMap.c7th_door.toString() + " back"] = FrameMap.c7th_empty_room;
+			transitions[FrameMap.c7th_door.toString() + " go"] = FrameMap.c7th_empty_room;
+			transitions[FrameMap.c7th_door.toString() + " enter"] = FrameMap.c7th_empty_room;
+			
+			//transitions[FrameMap.c7th_empty_room.toString() + " back"] = FrameMap.c7th_empty_room;
+			transitions[FrameMap.c7th_empty_room.toString() + " go"] = FrameMap.c7th_corridor;
+			transitions[FrameMap.c7th_empty_room.toString() + " enter"] = FrameMap.c7th_corridor;
+			
+			transitions[FrameMap.c7th_corridor.toString() + " back"] = FrameMap.c7th_empty_room;
+			transitions[FrameMap.c7th_corridor.toString() + " go"] = FrameMap.c7th_courtyard;
+			transitions[FrameMap.c7th_corridor.toString() + " enter"] = FrameMap.c7th_courtyard;
+			
+			transitions[FrameMap.c7th_courtyard.toString() + " give"] = FrameMap.c7th_exit;
+			//transitions[FrameMap.c7th_courtyard.toString() + " *"] = FrameMap.c7th_exit;
+			
+			transitions[FrameMap.c7th_exit.toString() + " back"] = FrameMap.c7th_exit_without_creator;
+			transitions[FrameMap.c7th_exit.toString() + " read"] = FrameMap.c7th_milestone;
+			
+			transitions[FrameMap.c7th_milestone.toString() + " back"] = FrameMap.c7th_exit_without_creator;
+			
+			transitions[FrameMap.c7th_exit_without_creator.toString() + " read"] = FrameMap.c7th_milestone;
 
 
 		}

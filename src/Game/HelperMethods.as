@@ -17,7 +17,9 @@
 				case 6:
 					return FrameMap.c6th_chamber;
 				case 7:
-					return FrameMap.c7th_chamber;
+					return FrameMap.c7th_chamber;	
+				case 8:
+					return FrameMap.c8th_out;
 				default:
 					return FrameMap.foothill;
 

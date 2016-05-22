@@ -13,7 +13,8 @@
 			FrameMap.c1st_milestone,
 			FrameMap.c2nd_milestone,
 			FrameMap.c3rd_milestone,
-			FrameMap.c6th_milestone
+			FrameMap.c6th_milestone,
+			FrameMap.c7th_milestone
 		);
 	}
 }

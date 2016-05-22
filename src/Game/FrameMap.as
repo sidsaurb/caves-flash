@@ -53,13 +53,18 @@
 		public static const c6th_milestone:int = 49; // changed from original
 		public static const c7th_chamber:int = 50;
 		public static const c7th_room:int = 51;
-		public static const c7th_door:int = 50;
-		public static const c7th_empty_room:int = 3;
-		public static const c7th_corridor:int = 3;
-		public static const c7th_courtyard:int = 3;
-		public static const c7th_exit:int = 3;
-		public static const c7th_exit_without_creator:int = 3;
-		public static const c8th_out:int = 3;
+		public static const c7th_door:int = 52;
+		public static const c7th_empty_room:int = 53;
+		public static const c7th_corridor:int = 54;
+		public static const c7th_courtyard:int = 55;
+		public static const c7th_exit:int = 56;
+		public static const c7th_exit_without_creator:int = 57;
+		public static const c7th_milestone:int = 58; // changed from original
+		public static const c8th_out:int = 59;
+		
+		public static const c4th_dead_in_lake:int = 59;
+		public static const c5th_dead_in_fall:int = 60;
+		public static const c7th_dead_by_wand:int = 61;
 
 	}
 

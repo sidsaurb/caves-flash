@@ -29,7 +29,6 @@
 			loginbutton.addEventListener(MouseEvent.CLICK, loginHandler);
 		}
 
-
 		function loadLevelList(): void {
 			var list: Array = new Array(level1, level2, level3, level4, level5, level6, level7);
 			for (var i: int = 1; i < 8; i++) {
@@ -45,7 +44,7 @@
 		function commandAcceptListner(event: KeyboardEvent): void {
 			if (event.charCode == 13) {
 				var key: String = this.currentFrame.toString() + " " + commandbox.commandtext.text;
-				trace(key);
+				//trace(key);
 				if (key in tMap.transitions) {
 					commandbox.commandtext.text = "";
 					navigateFrame(tMap.transitions[key]);
@@ -61,6 +60,8 @@
 					sendEncryptionRequest(5, commandbox.commandtext.text);
 				} else if (this.currentFrame == FrameMap.c6th_milestone) {
 					checkLevelnSolution(6, commandbox.commandtext.text);
+				} else if (this.currentFrame == FrameMap.c7th_milestone) {
+					checkLevelnSolution(7, commandbox.commandtext.text);
 				} else if (this.currentFrame == FrameMap.c3rd_chamber && (commandbox.commandtext.text == "go" || commandbox.commandtext.text == "enter")) {
 					commandbox.commandtext.text = "";
 					if (Globals.spiritFreed == true)
@@ -83,7 +84,7 @@
 					if (Globals.wandPresent == true) {
 						sendCheckpointQueries(2);
 					} else {
-						errorbox.text = "You don't have anything to wave";
+						errorbox.text = "You have nothing to wave";
 					}
 				} else if (this.currentFrame == FrameMap.c3rd_under_chamber && (commandbox.commandtext.text == "back" || commandbox.commandtext.text == "back")) {
 					commandbox.commandtext.text = "";
@@ -100,7 +101,6 @@
 					commandbox.commandtext.text = "";
 					if (Globals.spiritFreed == true) {
 						navigateFrame(FrameMap.c4th_milestone);
-						//urltextbox.text = Constants.BASEURL + Constants.DES;
 					} else {
 						navigateFrame(FrameMap.c4th_empty_milestone);
 					}
@@ -113,12 +113,18 @@
 					}
 				} else if (this.currentFrame == FrameMap.c4th_under_water) {
 					// die and restart the game
+					commandbox.commandtext.text = "";
 					errorbox.text = "You are dead";
 				} else if (this.currentFrame == FrameMap.c4th_breathe_and_dive && (commandbox.commandtext.text == "pull" || commandbox.commandtext.text == "take")) {
 					commandbox.commandtext.text = "";
 					sendCheckpointQueries(1);
 				} else if (this.currentFrame == FrameMap.c5th_fall || this.currentFrame == FrameMap.c5th_back_fall) {
 					// die and restart the game
+					commandbox.commandtext.text = "";
+					errorbox.text = "You are dead";
+				} else if (this.currentFrame == FrameMap.c7th_courtyard) {
+					// die and restart the game
+					commandbox.commandtext.text = "";
 					errorbox.text = "You are dead";
 				} else if (commandbox.commandtext.text == "read" && (this.currentFrame == FrameMap.c6th_chamber ||
 					this.currentFrame == FrameMap.c6th_maze_1 ||
@@ -131,14 +137,73 @@
 					this.currentFrame == FrameMap.c6th_maze_8 ||
 					this.currentFrame == FrameMap.c6th_maze_9)) {
 					commandbox.commandtext.text = "";
-					errorbox.text = "Nothing is written on the glass panel";
+					errorbox.text = "You examine the screen carefully.. nothing is written on it.";
+				} else if (commandbox.commandtext.text == "back") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You can't go back from here!";
+				} else if (commandbox.commandtext.text == "wave") {
+					commandbox.commandtext.text = "";
+					if (Globals.wandPresent == true)
+						errorbox.text = "You have nothing to wave";
+					else
+						errorbox.text = "You wave the wand but nothing happens";
+				} else if (commandbox.commandtext.text == "exit1" ||
+					commandbox.commandtext.text == "exit2" ||
+					commandbox.commandtext.text == "exit3" ||
+					commandbox.commandtext.text == "exit4") {
+					errorbox.text = "There is no numbered exit here";
+				} else if (commandbox.commandtext.text == "back") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You tried to climb the walls but failed";
+				} else if (commandbox.commandtext.text == "give") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "There is no one to give anything to!";
+				} else if (commandbox.commandtext.text == "pluck") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "There is nothing to pluck here!";
+				} else if (commandbox.commandtext.text == "pick") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "There is nothing to pick here!";
+				} else if (commandbox.commandtext.text == "go") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You try to force your way through the wall, and end up exhausting yourself";
+				} else if (commandbox.commandtext.text == "enter") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You try to force your way through the wall, and end up exhausting yourself";
+				} else if (commandbox.commandtext.text == "read") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You try to understand the funny patterns on the wall but in vain";
+				} else if (commandbox.commandtext.text == "pull") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You insert and pull your hand out of a hole";
+				} else if (commandbox.commandtext.text == "put") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You insert your hand in a small hole in the floor, but find nothing";
+				} else if (commandbox.commandtext.text == "insert") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You insert your hand in a small hole in the floor, but find nothing";
+				} else if (commandbox.commandtext.text == "jump") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You jump on the floor, making your feet sore";
+				} else if (commandbox.commandtext.text == "catch") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You try to catch something but find only air";
+				} else if (commandbox.commandtext.text == "grab") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You try to catch something but find only air";
+				} else if (commandbox.commandtext.text == "explore") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You explore the whole area, but find nothing interesting";
+				} else if (commandbox.commandtext.text == "dive") {
+					commandbox.commandtext.text = "";
+					errorbox.text = "You dive into the floor, and hurt yourself badly";
 				} else {
 					// show unknown command dialog
 					errorbox.text = "Unknown command " + commandbox.commandtext.text;
 					commandbox.commandtext.text = "";
 				}
-				}
 			}
+
 		}
 
 
@@ -353,6 +418,9 @@
 				n == FrameMap.c5th_underwater ||
 				n == FrameMap.c5th_back_fall ||
 				n == FrameMap.c7th_room ||
+				n == FrameMap.c7th_door ||
+				n == FrameMap.c5th_dead_in_fall ||
+				n == FrameMap.c7th_empty_room ||
 				n == FrameMap.c3rd_free_spirit) {
 				opacity.alpha = 0.6;
 			} else if (n == FrameMap.c4th_lake ||
@@ -360,6 +428,10 @@
 				n == FrameMap.c5th_hall ||
 				n == FrameMap.c5th_milestone ||
 				n == FrameMap.c7th_chamber ||
+				n == FrameMap.c7th_corridor ||
+				n == FrameMap.c7th_exit ||
+				n == FrameMap.c7th_exit_without_creator ||
+				n == FrameMap.c7th_dead_by_wand ||
 				n == FrameMap.c4th_lake_shore_without_wand) {
 				opacity.alpha = 0.3;
 			} else {
