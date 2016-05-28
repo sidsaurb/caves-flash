@@ -137,62 +137,62 @@
 			transitions[FrameMap.c6th_maze_1.toString() + " exit2"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_1.toString() + " exit3"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_1.toString() + " exit4"] = FrameMap.c6th_maze_1;
-			transitions[FrameMap.c6th_maze_1.toString() + " back"] = FrameMap.c6th_maze_1;
+			//transitions[FrameMap.c6th_maze_1.toString() + " back"] = FrameMap.c6th_maze_1;
 
 			transitions[FrameMap.c6th_maze_2.toString() + " exit1"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_2.toString() + " exit2"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_2.toString() + " exit3"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_2.toString() + " exit4"] = FrameMap.c6th_maze_3;
-			transitions[FrameMap.c6th_maze_2.toString() + " back"] = FrameMap.c6th_maze_2;
+			//transitions[FrameMap.c6th_maze_2.toString() + " back"] = FrameMap.c6th_maze_2;
 
 			transitions[FrameMap.c6th_maze_3.toString() + " exit1"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_3.toString() + " exit2"] = FrameMap.c6th_maze_3;
 			transitions[FrameMap.c6th_maze_3.toString() + " exit3"] = FrameMap.c6th_maze_4;
 			transitions[FrameMap.c6th_maze_3.toString() + " exit4"] = FrameMap.c6th_maze_1;
-			transitions[FrameMap.c6th_maze_3.toString() + " back"] = FrameMap.c6th_maze_3;
+			//transitions[FrameMap.c6th_maze_3.toString() + " back"] = FrameMap.c6th_maze_3;
 
 			transitions[FrameMap.c6th_maze_4.toString() + " exit1"] = FrameMap.c6th_maze_5;
 			transitions[FrameMap.c6th_maze_4.toString() + " exit2"] = FrameMap.c6th_maze_3;
 			transitions[FrameMap.c6th_maze_4.toString() + " exit3"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_4.toString() + " exit4"] = FrameMap.c6th_maze_2;
-			transitions[FrameMap.c6th_maze_4.toString() + " back"] = FrameMap.c6th_maze_4;
+			//transitions[FrameMap.c6th_maze_4.toString() + " back"] = FrameMap.c6th_maze_4;
 
 			transitions[FrameMap.c6th_maze_5.toString() + " exit1"] = FrameMap.c6th_maze_5;
 			transitions[FrameMap.c6th_maze_5.toString() + " exit2"] = FrameMap.c6th_maze_4;
 			transitions[FrameMap.c6th_maze_5.toString() + " exit3"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_5.toString() + " exit4"] = FrameMap.c6th_maze_6;
-			transitions[FrameMap.c6th_maze_5.toString() + " back"] = FrameMap.c6th_maze_5;
+			//transitions[FrameMap.c6th_maze_5.toString() + " back"] = FrameMap.c6th_maze_5;
 
 			transitions[FrameMap.c6th_maze_6.toString() + " exit1"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_6.toString() + " exit2"] = FrameMap.c6th_maze_5;
 			transitions[FrameMap.c6th_maze_6.toString() + " exit3"] = FrameMap.c6th_maze_4;
 			transitions[FrameMap.c6th_maze_6.toString() + " exit4"] = FrameMap.c6th_maze_7;
-			transitions[FrameMap.c6th_maze_6.toString() + " back"] = FrameMap.c6th_maze_6;
+			//transitions[FrameMap.c6th_maze_6.toString() + " back"] = FrameMap.c6th_maze_6;
 
 			transitions[FrameMap.c6th_maze_7.toString() + " exit1"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_7.toString() + " exit2"] = FrameMap.c6th_maze_8;
 			transitions[FrameMap.c6th_maze_7.toString() + " exit3"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_7.toString() + " exit4"] = FrameMap.c6th_maze_6;
-			transitions[FrameMap.c6th_maze_7.toString() + " back"] = FrameMap.c6th_maze_7;
+			//transitions[FrameMap.c6th_maze_7.toString() + " back"] = FrameMap.c6th_maze_7;
 
 			transitions[FrameMap.c6th_maze_8.toString() + " exit1"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_8.toString() + " exit2"] = FrameMap.c6th_maze_9;
 			transitions[FrameMap.c6th_maze_8.toString() + " exit3"] = FrameMap.c6th_maze_7;
 			transitions[FrameMap.c6th_maze_8.toString() + " exit4"] = FrameMap.c6th_maze_5;
-			transitions[FrameMap.c6th_maze_8.toString() + " back"] = FrameMap.c6th_maze_8;
+			//transitions[FrameMap.c6th_maze_8.toString() + " back"] = FrameMap.c6th_maze_8;
 
 			transitions[FrameMap.c6th_maze_9.toString() + " exit1"] = FrameMap.c6th_maze_0;
 			transitions[FrameMap.c6th_maze_9.toString() + " exit2"] = FrameMap.c6th_maze_3;
 			transitions[FrameMap.c6th_maze_9.toString() + " exit3"] = FrameMap.c6th_maze_8;
 			transitions[FrameMap.c6th_maze_9.toString() + " exit4"] = FrameMap.c6th_maze_2;
-			transitions[FrameMap.c6th_maze_9.toString() + " back"] = FrameMap.c6th_maze_9;
+			//transitions[FrameMap.c6th_maze_9.toString() + " back"] = FrameMap.c6th_maze_9;
 
 			transitions[FrameMap.c6th_maze_0.toString() + " exit1"] = FrameMap.c6th_maze_4;
 			transitions[FrameMap.c6th_maze_0.toString() + " exit2"] = FrameMap.c6th_maze_9;
 			transitions[FrameMap.c6th_maze_0.toString() + " exit3"] = FrameMap.c6th_maze_7;
 			transitions[FrameMap.c6th_maze_0.toString() + " exit4"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_maze_0.toString() + " read"] = FrameMap.c6th_milestone;
-			transitions[FrameMap.c6th_maze_0.toString() + " back"] = FrameMap.c6th_maze_0;
+			//transitions[FrameMap.c6th_maze_0.toString() + " back"] = FrameMap.c6th_maze_0;
 			
 			transitions[FrameMap.c6th_milestone.toString() + " back"] = FrameMap.c6th_maze_0;
 			
