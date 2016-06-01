@@ -11,6 +11,7 @@
 		public static const FOUNDWAND = "fw";
 		public static const DES = "des";
 		public static const AES = "eaeae";
+		public static const STATS = "stats";
 
 	}
 

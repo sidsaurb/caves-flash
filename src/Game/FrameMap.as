@@ -69,6 +69,7 @@
 		
 		
 		public static const credits:int = 63;
+		public static const stats:int = 64;
 
 	}
 

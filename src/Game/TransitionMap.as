@@ -71,7 +71,7 @@
 			//transitions[FrameMap.c4th_lake.toString() + " jump"] = FrameMap.c4th_chamber;
 			//transitions[FrameMap.c4th_lake.toString() + " dive"] = FrameMap.c4th_chamber;
 
-			transitions[FrameMap.c4th_first_dive.toString() + " back"] = FrameMap.c4th_chamber;
+			transitions[FrameMap.c4th_first_dive.toString() + " back"] = FrameMap.c4th_lake;
 			transitions[FrameMap.c4th_first_dive.toString() + " jump"] = FrameMap.c4th_under_water;
 			transitions[FrameMap.c4th_first_dive.toString() + " dive"] = FrameMap.c4th_under_water;
 

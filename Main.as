@@ -7,6 +7,7 @@
 	import flash.net.*;
 	import flash.media.Sound;
 	import src.com.adobe.crypto.MD5;
+	import flash.text.TextFormat;
 
 	import src.Game.*;
 	import src.NetworkManager.*;
@@ -22,9 +23,11 @@
 		var urlPrompt: String = "http://172.27.22.108:9999/";
 		var tMap: TransitionMap = new TransitionMap();
 		var commandboxListnerAdded: Boolean = false;
+		var retryListenerAdded: Boolean = false;
 		//var restartListnerAdded: Boolean = false;
 
 		public function Main() {
+
 			teamname.addEventListener(FocusEvent.FOCUS_IN, onTeamNameFocusChange);
 			teamname.addEventListener(FocusEvent.FOCUS_OUT, onTeamNameFocusChange);
 			password.addEventListener(FocusEvent.FOCUS_IN, onPasswordFocusChange);
@@ -33,35 +36,45 @@
 			playurl.addEventListener(FocusEvent.FOCUS_OUT, onUrlFocusChange);
 			teamname.text = teamNamePrompt;
 			password.text = passwordPrompt;
-			var url: String = ExternalInterface.call("window.location.href.toString");
-			if (url) {
-				var temp: String = getBaseUrl(url);
-				if (temp.length < 15) {
-					playurl.text = urlPrompt;
-					playurl.visible = true;
+			try {
+				var url: String = ExternalInterface.call("window.location.href.toString");
+				if (url) {
+					var temp: String = getBaseUrl(url);
+					if (temp.length < 15) {
+						playurl.text = urlPrompt;
+						playurl.visible = true;
+					} else {
+						playurl.text = temp;
+						playurl.visible = false;
+					}
 				} else {
-					playurl.text = temp;
-					playurl.visible = false;
+					playurl.text = urlPrompt;
 				}
-			} else {
-				playurl.text = urlPrompt;
+			} catch (error: Error) {
+
 			}
 			loginbutton.addEventListener(MouseEvent.CLICK, loginHandler);
 			creditsbutton.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
 				navigateFrame(FrameMap.credits);
 			});
+
 		}
 
 		function getBaseUrl(url: String): String {
-			var nMatch: Number = url.indexOf("/");
-			var count: int = 0;
-			while (nMatch != -1) {
-				//trace(nMatch);
-				count += 1;
-				nMatch = url.indexOf("/", nMatch + 1);
-				if (count == 2) {
-					return url.substr(0, nMatch + 1);
+			try {
+				var nMatch: Number = url.indexOf("/");
+				var count: int = 0;
+				while (nMatch != -1) {
+					//trace(nMatch);
+					count += 1;
+					nMatch = url.indexOf("/", nMatch + 1);
+					if (count == 2) {
+						return url.substr(0, nMatch + 1);
+					}
 				}
+				return "";
+			} catch (error: Error) {
+				return "";
 			}
 			return "";
 		}
@@ -89,20 +102,7 @@
 						errorbox.text = "";
 						//commandboxListnerAdded = false;
 						navigateFrame(tMap.transitions[key]);
-					} else if (this.currentFrame == FrameMap.c1st_milestone) {
-						checkLevelnSolution(1, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c2nd_milestone) {
-						checkLevelnSolution(2, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c3rd_milestone) {
-						checkLevelnSolution(3, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c4th_milestone) {
-						sendEncryptionRequest(4, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c5th_milestone) {
-						sendEncryptionRequest(5, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c6th_milestone) {
-						checkLevelnSolution(6, commandbox.commandtext.text);
-					} else if (this.currentFrame == FrameMap.c7th_milestone) {
-						checkLevelnSolution(7, commandbox.commandtext.text);
+
 					} else if (this.currentFrame == FrameMap.c3rd_chamber && (commandbox.commandtext.text == "go" || commandbox.commandtext.text == "enter")) {
 						commandbox.commandtext.text = "";
 						if (Globals.spiritFreed == true)
@@ -117,6 +117,9 @@
 						} else {
 							errorbox.text = "There is nothing to give to anyone";
 						}
+					} else if (commandbox.commandtext.text == "list") {
+						commandbox.commandtext.text = "";
+						errorbox.text = "give, read, enter, go, climb, put, insert, pull, dive, jump, back, catch, grab, explore, pick, pluck, wave, list, exit1, exit2, exit3, exit4 ";
 					} else if (this.currentFrame == FrameMap.c3rd_side_without_spirit && commandbox.commandtext.text == "give") {
 						commandbox.commandtext.text = "";
 						errorbox.text = "There is no one to give anything";
@@ -207,6 +210,7 @@
 						commandbox.commandtext.text == "exit2" ||
 						commandbox.commandtext.text == "exit3" ||
 						commandbox.commandtext.text == "exit4") {
+						commandbox.commandtext.text = "";
 						errorbox.text = "There is no numbered exit here";
 					} else if (commandbox.commandtext.text == "back") {
 						commandbox.commandtext.text = "";
@@ -228,7 +232,7 @@
 						errorbox.text = "You try to force your way through the wall, and end up exhausting yourself";
 					} else if (commandbox.commandtext.text == "read") {
 						commandbox.commandtext.text = "";
-						errorbox.text = "You try to understand the funny patterns on the wall but in vain";
+						errorbox.text = "You try to understand the funny patterns on the walls but in vain";
 					} else if (commandbox.commandtext.text == "pull") {
 						commandbox.commandtext.text = "";
 						errorbox.text = "You insert and pull your hand out of a hole";
@@ -253,6 +257,20 @@
 					} else if (commandbox.commandtext.text == "dive") {
 						commandbox.commandtext.text = "";
 						errorbox.text = "You dive into the floor, and hurt yourself badly";
+					} else if (this.currentFrame == FrameMap.c1st_milestone) {
+						checkLevelnSolution(1, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c2nd_milestone) {
+						checkLevelnSolution(2, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c3rd_milestone) {
+						checkLevelnSolution(3, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c4th_milestone) {
+						sendEncryptionRequest(4, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c5th_milestone) {
+						sendEncryptionRequest(5, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c6th_milestone) {
+						checkLevelnSolution(6, commandbox.commandtext.text);
+					} else if (this.currentFrame == FrameMap.c7th_milestone) {
+						checkLevelnSolution(7, commandbox.commandtext.text);
 					} else {
 						// show unknown command dialog
 						errorbox.text = "Unknown command " + commandbox.commandtext.text;
@@ -421,27 +439,28 @@
 				var checkLoader: URLLoader = new URLLoader();
 				checkLoader.addEventListener(Event.COMPLETE,
 					function handler(e: Event): void {
+						//trace(e.target.data);
 						var resp: Object = JSON.parse(e.target.data);
 						if (resp.error == null && resp.success == true) {
 							commandbox.commandtext.text = "";
 							progressbar.visible = false;
-							opacity.alpha = 0;
+							opacity.alpha = 0.6;
 							navigateFrame(HelperMethods.levelToFrameNumber(n + 1));
 						} else {
 							progressbar.visible = false;
-							opacity.alpha = 0;
+							opacity.alpha = 0.6;
 							errorbox.text = "Unknown command " + commandbox.commandtext.text;
 							commandbox.commandtext.text = "";
 						}
 					}, false, 0, true);
 				checkLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
 					progressbar.visible = false;
-					opacity.alpha = 0;
+					opacity.alpha = 0.6;
 					errorbox.text = "Oops.. Can't connect";
 				});
 				checkLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
 					progressbar.visible = false;
-					opacity.alpha = 0;
+					opacity.alpha = 0.6;
 					errorbox.text = "Oops.. Can't connect";
 				});
 				var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHECKLEVELS + n.toString());
@@ -451,10 +470,90 @@
 				checkLoader.load(request)
 			} catch (error: Error) {
 				progressbar.visible = false;
-				opacity.alpha = 0;
+				opacity.alpha = 0.6;
 				errorbox.text = "Oops.. Can't connect";
 			}
 		}
+
+		function statsListener(e: MouseEvent): void {
+			//trace("rl");
+			gotoAndStop(FrameMap.stats);
+			loadStats();
+			backbutton.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+				gotoAndStop(2);
+				loadLevelList();
+				backbutton.addEventListener(MouseEvent.CLICK, restartListener);
+				statsbutton.addEventListener(MouseEvent.CLICK, statsListener);
+			});
+		}
+
+		function loadStats(): void {
+			opacity.alpha = 0.85;
+			progressbar.visible = true;
+			var req: StatsRequest = new StatsRequest(Globals.teamname, Globals.password);
+			var jsonReq: String = JSON.stringify(req);
+			var statsLoader: URLLoader = new URLLoader();
+			statsLoader.addEventListener(Event.COMPLETE, function handler(e: Event): void {
+				//trace(e.target.data);
+				var resp: Object = JSON.parse(e.target.data);
+				if (resp.error == null) {
+					opacity.alpha = 0.5;
+					progressbar.visible = false;
+					if (resp.stats[0] != "") {
+						chapter1.text = "Chapter 1: " + resp.stats[0];
+					} else {
+						chapter1.text = "Chapter 1: N/A";
+					}
+					if (resp.stats[1] != "") {
+						chapter2.text = "Chapter 2: " + resp.stats[1];
+					} else {
+						chapter2.text = "Chapter 2: N/A";
+					}
+					if (resp.stats[2] != "") {
+						chapter3.text = "Chapter 3: " + resp.stats[2];
+					} else {
+						chapter3.text = "Chapter 3: N/A";
+					}
+					if (resp.stats[3] != "") {
+						chapter4.text = "Chapter 4: " + resp.stats[3];
+					} else {
+						chapter4.text = "Chapter 4: N/A";
+					}
+					if (resp.stats[4] != "") {
+						chapter5.text = "Chapter 5: " + resp.stats[4];
+					} else {
+						chapter5.text = "Chapter 5: N/A";
+					}
+					if (resp.stats[5] != "") {
+						chapter6.text = "Chapter 6: " + resp.stats[5];
+					} else {
+						chapter6.text = "Chapter 6: N/A";
+					}
+					if (resp.stats[6] != "") {
+						chapter7.text = "Chapter 7: " + resp.stats[6];
+					} else {
+						chapter7.text = "Chapter 7: N/A";
+					}
+				} else {
+					opacity.alpha = 0.5;
+					progressbar.visible = false;
+				}
+			}, false, 0, true);
+			statsLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
+				opacity.alpha = 0.5;
+				progressbar.visible = false;
+			});
+			statsLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
+				opacity.alpha = 0.5;
+				progressbar.visible = false;
+			});
+			var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.STATS);
+			request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
+			request.data = jsonReq;
+			request.method = URLRequestMethod.POST;
+			statsLoader.load(request);
+		}
+
 
 		function restartListener(e: MouseEvent): void {
 			//trace("rl");
@@ -489,6 +588,7 @@
 			commandboxListnerAdded = false;
 		}
 
+
 		function navigateFrame(n: int): void {
 			var mySound: Sound;
 			//trace(n,FrameMap.c4th_dead_in_lake );
@@ -498,7 +598,7 @@
 			} else if (n == FrameMap.c4th_dead_in_lake) {
 				mySound = new DrownInWater();
 				mySound.play();
-			}else if (n == FrameMap.c7th_dead_by_wand) {
+			} else if (n == FrameMap.c7th_dead_by_wand) {
 				mySound = new DeadByWand();
 				mySound.play();
 			} else {
@@ -515,8 +615,10 @@
 			if (backbutton != null) {
 				backbutton.addEventListener(MouseEvent.CLICK, restartListener);
 			}
-			if (Globals.challengeLevels.indexOf(n) >= 0)
+			if (Globals.challengeLevels.indexOf(n) >= 0) {
+				retryListenerAdded = false;
 				fetchChallenge(n);
+			}
 			if (!commandboxListnerAdded) {
 				commandbox.commandtext.addEventListener(KeyboardEvent.KEY_UP, commandAcceptListner);
 				commandboxListnerAdded = true;
@@ -547,6 +649,14 @@
 				n == FrameMap.c7th_empty_room ||
 				n == FrameMap.login ||
 				n == FrameMap.credits ||
+				n == FrameMap.cave_front_milestone ||
+				n == FrameMap.c1st_milestone ||
+				n == FrameMap.c2nd_milestone ||
+				n == FrameMap.c3rd_milestone ||
+				n == FrameMap.c6th_milestone ||
+				n == FrameMap.c7th_milestone ||
+				n == FrameMap.c1st_chamber ||
+				n == FrameMap.c2nd_boulder ||
 				n == FrameMap.c3rd_free_spirit) {
 				opacity.alpha = 0.6;
 			} else if (n == FrameMap.c4th_lake ||
@@ -559,6 +669,17 @@
 				n == FrameMap.c7th_exit ||
 				n == FrameMap.c7th_exit_without_creator ||
 				n == FrameMap.c7th_dead_by_wand ||
+				n == FrameMap.c6th_chamber ||
+				n == FrameMap.c6th_maze_0 ||
+				n == FrameMap.c6th_maze_1 ||
+				n == FrameMap.c6th_maze_2 ||
+				n == FrameMap.c6th_maze_3 ||
+				n == FrameMap.c6th_maze_4 ||
+				n == FrameMap.c6th_maze_5 ||
+				n == FrameMap.c6th_maze_6 ||
+				n == FrameMap.c6th_maze_7 ||
+				n == FrameMap.c6th_maze_8 ||
+				n == FrameMap.c6th_maze_9 ||
 				n == FrameMap.c4th_lake_shore_without_wand) {
 				opacity.alpha = 0.3;
 			} else {
@@ -601,38 +722,47 @@
 			var jsonReq: String = JSON.stringify(req);
 			var challengeLoader: URLLoader = new URLLoader();
 			challengeLoader.addEventListener(Event.COMPLETE, function handler(e: Event): void {
-				trace(e.target.data);
+				//trace(e.target.data);
 				var resp: Object = JSON.parse(e.target.data);
 				if (resp.error == null) {
-					opacity.alpha = 0;
+					opacity.alpha = 0.6;
 					progressbar.visible = false;
 					retrybox.visible = false;
 					challengetext.text = resp.challenge;
 				} else {
 					// show error dialog
 					retrybox.visible = true;
-					opacity.alpha = 0;
+					opacity.alpha = 0.6;
 					progressbar.visible = false;
-					retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-						fetchChallenge(n);
-					});
+					if (!retryListenerAdded) {
+						retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+							fetchChallenge(n);
+						});
+						retryListenerAdded = true;
+					}
 				}
 			}, false, 0, true);
 			challengeLoader.addEventListener(IOErrorEvent.IO_ERROR, function handler(e: Event): void {
-				opacity.alpha = 0;
+				opacity.alpha = 0.6;
 				progressbar.visible = false;
 				retrybox.visible = true;
-				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-					fetchChallenge(n);
-				});
+				if (!retryListenerAdded) {
+					retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+						fetchChallenge(n);
+					});
+					retryListenerAdded = true;
+				}
 			});
 			challengeLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
-				opacity.alpha = 0;
+				opacity.alpha = 0.6;
 				progressbar.visible = false;
 				retrybox.visible = true;
-				retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
-					fetchChallenge(n);
-				});
+				if (!retryListenerAdded) {
+					retrybox.addEventListener(MouseEvent.CLICK, function handler(e: MouseEvent): void {
+						fetchChallenge(n);
+					});
+					retryListenerAdded = true;
+				}
 			});
 			var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.CHALLENGES + HelperMethods.frameNumberToLevel(n));
 			request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
@@ -653,7 +783,7 @@
 				var loginLoader: URLLoader = new URLLoader();
 				loginLoader.addEventListener(Event.COMPLETE, function logincomplete(e: Event): void {
 					var resp: Object = JSON.parse(e.target.data);
-					trace(e.target.data);
+					//trace(e.target.data);
 					if (resp.error == null) {
 						Globals.completedTill = resp.ct;
 						Globals.wandPresent = resp.wf;
@@ -666,6 +796,8 @@
 						Fade.fadeIntoFrame(root, stage, 2);
 						gotoAndStop(2);
 						loadLevelList();
+						backbutton.addEventListener(MouseEvent.CLICK, restartListener);
+						statsbutton.addEventListener(MouseEvent.CLICK, statsListener);
 					} else {
 						errorbox.text = resp.error;
 						opacity.alpha = 0.5;
@@ -697,50 +829,63 @@
 		}
 
 		function onTeamNameFocusChange(event: FocusEvent): void {
-			switch (event.type) {
-				case FocusEvent.FOCUS_IN:
-					if (teamname.text == teamNamePrompt) {
-						teamname.text = "";
-					}
-					break;
-				case FocusEvent.FOCUS_OUT:
-					if (teamname.text == "") {
-						teamname.text = teamNamePrompt;
-					}
-					break;
+			try {
+				switch (event.type) {
+					case FocusEvent.FOCUS_IN:
+						if (teamname.text == teamNamePrompt) {
+							teamname.text = "";
+						}
+						break;
+					case FocusEvent.FOCUS_OUT:
+						if (teamname != null && teamname.text == "") {
+							teamname.text = teamNamePrompt;
+						}
+						break;
+				}
+			} catch (error: Error) {
+				//trace("sad")
 			}
 		}
 
 		function onPasswordFocusChange(event: FocusEvent): void {
-			switch (event.type) {
-				case FocusEvent.FOCUS_IN:
-					if (password.text == passwordPrompt) {
-						password.text = "";
-						//password.displayAsPassword = true;
-					}
-					break;
-				case FocusEvent.FOCUS_OUT:
-					if (password.text == "") {
-						password.text = passwordPrompt;
-						//password.displayAsPassword = false;
-					}
-					break;
+			try {
+				switch (event.type) {
+					case FocusEvent.FOCUS_IN:
+						if (password.text == passwordPrompt) {
+							password.text = "";
+							//password.displayAsPassword = true;
+						}
+						break;
+					case FocusEvent.FOCUS_OUT:
+						//trace("here");
+						if (password != null && password.text == "") {
+							password.text = passwordPrompt;
+							//password.displayAsPassword = false;
+						}
+						break;
+				}
+			} catch (error: Error) {
+				//trace("sad")
 			}
 		}
 
 		function onUrlFocusChange(event: FocusEvent): void {
-			//trace("heresas")
-			switch (event.type) {
-				case FocusEvent.FOCUS_IN:
-					if (playurl.text == urlPrompt) {
-						playurl.text = "";
-					}
-					break;
-				case FocusEvent.FOCUS_OUT:
-					if (playurl.text == "") {
-						playurl.text = urlPrompt;
-					}
-					break;
+			try {
+				//trace("heresas")
+				switch (event.type) {
+					case FocusEvent.FOCUS_IN:
+						if (playurl.text == urlPrompt) {
+							playurl.text = "";
+						}
+						break;
+					case FocusEvent.FOCUS_OUT:
+						if (playurl != null && playurl.text == "") {
+							playurl.text = urlPrompt;
+						}
+						break;
+				}
+			} catch (error: Error) {
+				//trace("sad")
 			}
 		}
 	}
