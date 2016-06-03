@@ -131,7 +131,7 @@
 			transitions[FrameMap.c6th_chamber.toString() + " exit2"] = FrameMap.c6th_maze_2;
 			transitions[FrameMap.c6th_chamber.toString() + " exit3"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_chamber.toString() + " exit4"] = FrameMap.c6th_maze_1;
-			transitions[FrameMap.c6th_chamber.toString() + " exit5"] = FrameMap.c6th_maze_0;
+			//transitions[FrameMap.c6th_chamber.toString() + " exit5"] = FrameMap.c6th_maze_0;
 
 			transitions[FrameMap.c6th_maze_1.toString() + " exit1"] = FrameMap.c6th_maze_1;
 			transitions[FrameMap.c6th_maze_1.toString() + " exit2"] = FrameMap.c6th_maze_2;

@@ -19,15 +19,14 @@
 
 		var teamNamePrompt: String = "team name here";
 		var passwordPrompt: String = "password here";
-		//var urlPrompt: String = "game url here";
-		var urlPrompt: String = "http://172.27.22.108:9999/";
+		var urlPrompt: String = "game url here";
+		//var urlPrompt: String = "http://172.27.22.108:9999/";
 		var tMap: TransitionMap = new TransitionMap();
 		var commandboxListnerAdded: Boolean = false;
 		var retryListenerAdded: Boolean = false;
 		//var restartListnerAdded: Boolean = false;
 
 		public function Main() {
-
 			teamname.addEventListener(FocusEvent.FOCUS_IN, onTeamNameFocusChange);
 			teamname.addEventListener(FocusEvent.FOCUS_OUT, onTeamNameFocusChange);
 			password.addEventListener(FocusEvent.FOCUS_IN, onPasswordFocusChange);
@@ -60,6 +59,9 @@
 
 		}
 
+		/*
+		 * function to get BaseUrl from the url in browser's address bar
+ 		 */
 		function getBaseUrl(url: String): String {
 			try {
 				var nMatch: Number = url.indexOf("/");
@@ -79,6 +81,9 @@
 			return "";
 		}
 
+		/*
+		 * function to load level list for the level selection page. Assign click handler to valid levels
+ 		 */
 		function loadLevelList(): void {
 			var list: Array = new Array(level1, level2, level3, level4, level5, level6, level7);
 			for (var i: int = 1; i < 8; i++) {
@@ -91,18 +96,22 @@
 			}
 		}
 
+		
+		/*
+		 * the main listener which deals with all the commands that user give.
+		 * First checks weather the command exists in TransitionMap class. If it
+		 * does exists, it performs a direct navigation. Else it performs certian
+		 * special functions according to the current frame and current command
+		 * as described by its giant if else structure
+ 		 */
 		function commandAcceptListner(event: KeyboardEvent): void {
 			if (commandbox.commandtext.text != "") {
 				if (event.charCode == 13) {
 					var key: String = this.currentFrame.toString() + " " + commandbox.commandtext.text;
-					//trace(key);
 					if (key in tMap.transitions) {
-						//trace(key);
 						commandbox.commandtext.text = "";
 						errorbox.text = "";
-						//commandboxListnerAdded = false;
 						navigateFrame(tMap.transitions[key]);
-
 					} else if (this.currentFrame == FrameMap.c3rd_chamber && (commandbox.commandtext.text == "go" || commandbox.commandtext.text == "enter")) {
 						commandbox.commandtext.text = "";
 						if (Globals.spiritFreed == true)
@@ -289,6 +298,9 @@
 		}
 
 
+		/*
+		 * function which sends encryption requests for DES and EAEAE level
+ 		 */
 		function sendEncryptionRequest(level: int, plaintext: String): void {
 			try {
 				progressbar.visible = true;
@@ -357,8 +369,12 @@
 			}
 		}
 
-		// checkpoint = 1 : wand found
-		// checkpoint = 2 : spirit freed
+		/*
+		 * funtion which tells the server that a particular checkpoint has been reached
+		 * there are currently two checkpoints:
+		 * checkpoint = 1 : wand found
+		 * checkpoint = 2 : spirit freed
+ 		 */ 
 		function sendCheckpointQueries(checkpoint: int): void {
 			try {
 				progressbar.visible = true;
@@ -429,6 +445,9 @@
 			}
 		}
 
+		/*
+		 * funtion to request server for checking solution of a level
+ 		 */ 
 		function checkLevelnSolution(n: int, answer: String): void {
 			try {
 				progressbar.visible = true;
@@ -567,7 +586,7 @@
 			playurl.addEventListener(FocusEvent.FOCUS_OUT, onUrlFocusChange);
 			teamname.text = teamNamePrompt;
 			password.text = passwordPrompt;
-			opacity.alpha = 0.6;
+			opacity.alpha = 0.7;
 			var url: String = ExternalInterface.call("window.location.href.toString");
 			if (url) {
 				var temp: String = getBaseUrl(url);
@@ -647,8 +666,6 @@
 				n == FrameMap.c7th_door ||
 				n == FrameMap.c5th_dead_in_fall ||
 				n == FrameMap.c7th_empty_room ||
-				n == FrameMap.login ||
-				n == FrameMap.credits ||
 				n == FrameMap.cave_front_milestone ||
 				n == FrameMap.c1st_milestone ||
 				n == FrameMap.c2nd_milestone ||
@@ -657,6 +674,7 @@
 				n == FrameMap.c7th_milestone ||
 				n == FrameMap.c1st_chamber ||
 				n == FrameMap.c2nd_boulder ||
+				n == FrameMap.c8th_out ||
 				n == FrameMap.c3rd_free_spirit) {
 				opacity.alpha = 0.6;
 			} else if (n == FrameMap.c4th_lake ||
@@ -682,6 +700,9 @@
 				n == FrameMap.c6th_maze_9 ||
 				n == FrameMap.c4th_lake_shore_without_wand) {
 				opacity.alpha = 0.3;
+			} else if (n == FrameMap.login ||
+				n == FrameMap.credits) {
+				opacity.alpha = 0.7;
 			} else {
 				opacity.alpha = 0;
 			}
@@ -714,6 +735,10 @@
 			}
 		}
 
+		
+		/*
+		 * funtion to fetch challenge string for a level
+ 		 */ 
 		function fetchChallenge(n: int) {
 			retrybox.visible = false;
 			opacity.alpha = 0.85;
@@ -790,7 +815,7 @@
 						Globals.spiritFreed = resp.sf;
 						Globals.teamname = req.teamname;
 						Globals.password = req.password;
-						opacity.alpha = 0.5;
+						opacity.alpha = 0.7;
 						var mySound: Sound = new TransitionSound();
 						mySound.play();
 						Fade.fadeIntoFrame(root, stage, 2);
@@ -800,7 +825,7 @@
 						statsbutton.addEventListener(MouseEvent.CLICK, statsListener);
 					} else {
 						errorbox.text = resp.error;
-						opacity.alpha = 0.5;
+						opacity.alpha = 0.7;
 						loginbutton.visible = true;
 						progressbar.visible = false;
 					}
@@ -809,14 +834,14 @@
 					loginbutton.visible = true;
 					progressbar.visible = false;
 					errorbox.text = "Oops.. Can't connect";
-					opacity.alpha = 0.5;
+					opacity.alpha = 0.7;
 				});
 				loginLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function handler(e: Event): void {
 					//trace("here");
 					loginbutton.visible = true;
 					progressbar.visible = false;
 					errorbox.text = "Oops.. Can't connect";
-					opacity.alpha = 0.5;
+					opacity.alpha = 0.7;
 				});
 				var request: URLRequest = new URLRequest(Constants.BASEURL + Constants.LOGIN);
 				request.requestHeaders.push(new URLRequestHeader("Content-Type", "text/plain"));
