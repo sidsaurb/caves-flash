@@ -1,5 +1,10 @@
 ﻿package src.Game {
 
+	
+	/*
+	 * The class that holds the map from english logical name of every frame to 
+	 * to its frame number in the timeline
+	*/
 	public class FrameMap {
 
 		public static const login:int = 1;
@@ -66,7 +71,6 @@
 		public static const c4th_dead_in_lake:int = 60;
 		public static const c5th_dead_in_fall:int = 61;
 		public static const c7th_dead_by_wand:int = 62;
-		
 		
 		public static const credits:int = 63;
 		public static const stats:int = 64;

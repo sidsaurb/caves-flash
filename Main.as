@@ -82,7 +82,7 @@
 		}
 
 		/*
-		 * function to load level list for the level selection page. Assign click handler to valid levels
+		 * function to load the level selction frame. Assign click handler to valid levels
  		 */
 		function loadLevelList(): void {
 			var list: Array = new Array(level1, level2, level3, level4, level5, level6, level7);

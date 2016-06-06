@@ -5,6 +5,12 @@
 
 		public var transitions: Dictionary;
 
+		/*
+		 * I didn't find any support for tuples in actionscript. That is why 
+		 * I had to define this dictionary with keys of the format "frameNumber<space>command".
+		 * There are a few transitions that are different from the original commandline version
+		 * of the game. 
+		 */
 		public function TransitionMap() {
 			transitions = new Dictionary();
 

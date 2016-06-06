@@ -6,6 +6,9 @@
 	import flash.display.MovieClip;
 	import flash.display.DisplayObject;
 
+	/*
+	 * Class used to create a zooming and fading animation while transitioning between the frames.
+	 */
 	public class Fade {
 		public static function fadeIntoFrame(root, stage, frame: int, Scene: String = null, alphaPerFrame: Number = 0.05) {
 			var data: BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, true, 0);

@@ -1,7 +1,10 @@
 ﻿package src.Game {
 	
+	// Some helper methods used throughout gameplay, which didn't interact with UI controls directly
+	// Speculated that this class would grow more. But it just contains two function
 	public class HelperMethods {
 		
+		// returns what is the starting frame number of a particular level
 		public static function levelToFrameNumber(n: int): int {
 			switch (n) {
 				case 1:
@@ -25,7 +28,8 @@
 
 			}
 		}
-
+		
+		// returns level number of a particular frame
 		public static function frameNumberToLevel(n: int): int {
 			if (n <= 7) {
 				return 1;
